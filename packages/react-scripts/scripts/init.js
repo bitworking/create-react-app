@@ -32,17 +32,24 @@ module.exports = function(
   const appPackage = require(path.join(appPath, 'package.json'));
   const useYarn = fs.existsSync(path.join(appPath, 'yarn.lock'));
 
-  // Copy over some of the devDependencies
-  appPackage.dependencies = appPackage.dependencies || {};
-
   // bitworking: require .template.package.json
   const templatePackageJsonPath = path.join(
-    appPath,
+    __dirname,
+    '..',
+    'template',
     '.template.package.json'
   );
   let packageJson = null;
   if (fs.existsSync(templatePackageJsonPath)) {
     packageJson = require(templatePackageJsonPath);
+  }
+
+  // Copy over some of the devDependencies
+  appPackage.dependencies = appPackage.dependencies || {};
+
+  // bitworking: add dependencies from .template.package.json
+  if (packageJson) {
+    Object.assign(appPackage.dependencies, packageJson.dependencies, packageJson.devDependencies);
   }
 
   // Setup the script rules
@@ -197,7 +204,54 @@ module.exports = function(
   );
   console.log(
     '    and scripts into the app directory. If you do this, you can’t go back!'
+  );  
+  console.log();
+  console.log(
+    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}coverage`)
   );
+  console.log(
+    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}test:ci`)
+  );
+  console.log(
+    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}lint`)
+  );
+  console.log(
+    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}lint:fix`)
+  );
+  console.log(
+    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}lint:ci`)
+  );
+  console.log(
+    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}stylelint:ci`)
+  );
+  console.log(
+    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}flow`)
+  );
+  console.log(
+    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}flow:ci`)
+  );
+  console.log(
+    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}atomic`)
+  );
+  console.log(
+    '    These scripts are added by bitworking-react-scripts.'
+  );
+  console.log();
+  console.log(`
+  _     _ ___          __        _    _             
+ | |   (_) \ \        / /       | |  (_)            
+ | |__  _| |\ \  /\  / /__  _ __| | ___ _ __   __ _ 
+ | '_ \| | __\ \/  \/ / _ \| '__| |/ / | '_ \ / _  |
+ | |_) | | |_ \  /\  / (_) | |  |   <| | | | | (_| |
+ |_.__/|_|\__| \/  \/ \___/|_|  |_|\_\_|_| |_|\__, |
+                                               __/ |
+                                              |___/ 
+  `);
+  console.log();
+  console.log('More info: https://github.com/bitworking/create-react-app');
+  console.log();
+  console.log('First install dependencies:');
+  console.log(`  ${chalk.cyan(`${displayedCommand} install`)}`);
   console.log();
   console.log('We suggest that you begin by typing:');
   console.log();
