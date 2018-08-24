@@ -35,6 +35,16 @@ module.exports = function(
   // Copy over some of the devDependencies
   appPackage.dependencies = appPackage.dependencies || {};
 
+  // bitworking: require .template.package.json
+  const templatePackageJsonPath = path.join(
+    appPath,
+    '.template.package.json'
+  );
+  let packageJson = null;
+  if (fs.existsSync(templatePackageJsonPath)) {
+    packageJson = require(templatePackageJsonPath);
+  }
+
   // Setup the script rules
   appPackage.scripts = {
     start: 'react-scripts start',
@@ -42,6 +52,21 @@ module.exports = function(
     test: 'react-scripts test --env=jsdom',
     eject: 'react-scripts eject',
   };
+
+  // bitworking: overwrite/add scripts from .template.package.json
+  if (packageJson) {
+    // scripts
+    const templateScripts = packageJson.scripts;
+    Object.assign(appPackage.scripts, templateScripts);
+  }
+
+  // bitworking: more package.json features
+  if (packageJson) {
+    appPackage['jest'] = packageJson['jest'];
+    appPackage['jest-junit'] = packageJson['jest-junit'];
+    appPackage['eslint-junit'] = packageJson['eslint-junit'];
+    appPackage['atomic-scripts'] = packageJson['atomic-scripts'];
+  }
 
   fs.writeFileSync(
     path.join(appPath, 'package.json'),
@@ -101,19 +126,25 @@ module.exports = function(
   }
   args.push('react', 'react-dom');
 
-  // Install additional template dependencies, if present
-  const templateDependenciesPath = path.join(
-    appPath,
-    '.template.dependencies.json'
-  );
-  if (fs.existsSync(templateDependenciesPath)) {
-    const templateDependencies = require(templateDependenciesPath).dependencies;
+  // bitworking: Install additional template dependencies, if present
+  if (packageJson) {
+    // dependencies
+    const templateDependencies = packageJson.dependencies;
     args = args.concat(
       Object.keys(templateDependencies).map(key => {
         return `${key}@${templateDependencies[key]}`;
       })
     );
-    fs.unlinkSync(templateDependenciesPath);
+
+    // devDependencies (for now install as normal dependency)
+    const templateDevDependencies = packageJson.devDependencies;
+    args = args.concat(
+      Object.keys(templateDevDependencies).map(key => {
+        return `${key}@${templateDevDependencies[key]}`;
+      })
+    );
+
+    fs.unlinkSync(templatePackageJsonPath);
   }
 
   // Install react and react-dom for backward compatibility with old CRA cli

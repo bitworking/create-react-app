@@ -1,8 +1,8 @@
 {
-  "name": "react-scripts",
-  "version": "1.1.4",
-  "description": "Configuration and scripts for Create React App.",
-  "repository": "facebookincubator/create-react-app",
+  "name": "bitworking-react-scripts",
+  "version": "1.1.2",
+  "description": "bitWorking configuration and scripts for Create React App.",
+  "repository": "bitworking/create-react-app",
   "license": "MIT",
   "engines": {
     "node": ">=6"
