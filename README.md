@@ -1,5 +1,17 @@
 # Create React App [![Build Status](https://travis-ci.org/facebookincubator/create-react-app.svg?branch=master)](https://travis-ci.org/facebookincubator/create-react-app)
 
+## bitworking-react-scripts
+
+This fork holds the bitworking-react-scripts.
+
+```sh
+npx create-react-app my-app --scripts-version bitworking-react-scripts
+cd my-app
+yarn install
+yarn start
+```
+
+
 Create React apps with no build configuration.
 
 * [Creating an App](#creating-an-app) – How to create a new app.
