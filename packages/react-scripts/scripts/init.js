@@ -151,7 +151,7 @@ module.exports = function(
       })
     );
 
-    fs.unlinkSync(templatePackageJsonPath);
+    fs.unlinkSync(path.join(appPath, '.template.package.json'));
   }
 
   // Install react and react-dom for backward compatibility with old CRA cli

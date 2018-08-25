@@ -3,7 +3,7 @@
     "start": "cross-env NODE_PATH=src/ react-scripts start",
     "build": "cross-env NODE_PATH=src/ react-scripts build",
     "test": "react-scripts test --env=jsdom --modulePaths=src --setupFiles=./jestsetup.js",
-    "coverage": "react-scripts test --coverage --env=jsdom",
+    "coverage": "react-scripts test --coverage --env=jsdom --modulePaths=src --setupFiles=./jestsetup.js",
     "test:ci": "react-scripts test --ci --coverage --coverageDirectory ./.reports/coverage --reporters jest-junit --env=jsdom --modulePaths=src --setupFiles=./jestsetup.js",
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.js && stylelint src/**/*.js",
